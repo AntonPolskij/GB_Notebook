@@ -21,6 +21,7 @@ def menu(data: list):
         print("Выберите действие")
         print("1: - Создать новую запись")
         print("2: - Просмотреть все заметки")
+        print("3: - Просмотреть заметки по дате")
         print("0: - Для выхода")
         print("*" * 10)
         get = input("Введите действие: ")
@@ -75,12 +76,19 @@ def select_note_ui(data: list):
         note = find_note(get, data)
         print(note)
         if type(note) == tuple:
-            print('Удалить запись: 1')
-            print('Изменить данные: 2')
+            print('1: - Удалить запись')
+            print('2: - Изменить данные')
             print('Возврат: Enter')
             input_value = input()
             if input_value == '1':
                 delete_note(data, note)
+            if input_value == '2':
+                print("1: - Изменить загаловок заметки")
+                print("2: - Изменить тело заметки")
+                print('Возврат в главное меню: Enter')
+                input_operation = input()
+                if input_operation == '1' or input_operation == '2':
+                    change_note(input_operation, note, data)
 
 
 def find_note(note_uuid: str, notes_list: list):
@@ -92,7 +100,17 @@ def find_note(note_uuid: str, notes_list: list):
 
 
 def delete_note(note_book: list, note):
+    print(f'Заметка: {note} удалена')
     note_book.remove(note)
+
+
+def change_note(operation, note: tuple, data: list):
+    index_in_data = data.index(note)
+    lst_note = [*note]
+    lst_note[int(operation)] = input("Введите новое значение: ")
+    data[index_in_data] = tuple(lst_note)
+    write_file(data)
+    print(f'Изменения сохранены!')
 
 
 menu(open_note_book('notes.csv'))
