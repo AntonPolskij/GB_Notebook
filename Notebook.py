@@ -21,7 +21,7 @@ def menu(data: list):
         print("Выберите действие")
         print("1: - Создать новую запись")
         print("2: - Просмотреть все заметки")
-        print("3: - Просмотреть заметки по дате")
+        print("3: - Просмотреть заметки в определенную дату")
         print("0: - Для выхода")
         print("*" * 10)
         get = input("Введите действие: ")
@@ -39,6 +39,9 @@ def menu(data: list):
             for elem in data:
                 print(f'{elem}')
             select_note_ui(data)
+        elif get == '3':
+            input_date = input("Введите нужную дату строго в формате - 'ГГГГ-ММ-ДД' (Пример: 2023-04-15) : ")
+            search_note_by_date(input_date, data)
 
 
 def create(data: list, elem: tuple) -> list:
@@ -111,6 +114,24 @@ def change_note(operation, note: tuple, data: list):
     data[index_in_data] = tuple(lst_note)
     write_file(data)
     print(f'Изменения сохранены!')
+
+
+def search_note_by_date(input_date, data):
+    if input_date != "":
+        try:
+            search_date = datetime.datetime.strptime(input_date, "%Y-%m-%d").date()
+            search_list = []
+            for elem in data:
+                if str(search_date) == elem[3].split(" ")[0]:
+                    search_list.append(elem)
+            if len(search_list) == 0:
+                print("В выбранную дату заметок не найдено")
+            else:
+                for elem in search_list:
+                    print(elem)
+                select_note_ui(data)
+        except ValueError:
+            print("Введено неверное значение")
 
 
 menu(open_note_book('notes.csv'))
